@@ -34,8 +34,6 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     try:
         if path == 'bathroom-consultation' and method == 'POST':
             return create_bathroom_consultation(event)
-        elif path == 'ceramic-registration' and method == 'POST':
-            return create_ceramic_registration(event)
         elif path == 'receipt-registration' and method == 'POST':
             return create_receipt_registration(event)
         elif path == 'news' and method == 'GET':
@@ -124,34 +122,6 @@ def create_bathroom_consultation(event: Dict[str, Any]) -> Dict[str, Any]:
     conn.close()
     
     return success_response({'id': result['id'], 'message': 'Consultation booked successfully'})
-
-def create_ceramic_registration(event: Dict[str, Any]) -> Dict[str, Any]:
-    body_data = json.loads(event.get('body', '{}'))
-    full_name = body_data.get('fullName', '')
-    phone = body_data.get('phone', '')
-    email = body_data.get('email', '')
-    address = body_data.get('address', '')
-    
-    if not all([full_name, phone, email]):
-        return error_response('Missing required fields', 400)
-    
-    conn = get_db_connection()
-    cur = conn.cursor()
-    
-    cur.execute(
-        "INSERT INTO ceramic_registrations (full_name, phone, email, address) VALUES ('{}', '{}', '{}', '{}') RETURNING id".format(
-            full_name.replace("'", "''"),
-            phone.replace("'", "''"),
-            email.replace("'", "''"),
-            address.replace("'", "''")
-        )
-    )
-    result = cur.fetchone()
-    conn.commit()
-    cur.close()
-    conn.close()
-    
-    return success_response({'id': result['id'], 'message': 'Ceramic registration successful'})
 
 def create_receipt_registration(event: Dict[str, Any]) -> Dict[str, Any]:
     body_data = json.loads(event.get('body', '{}'))

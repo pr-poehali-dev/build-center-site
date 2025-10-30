@@ -34,23 +34,7 @@ const Index = () => {
     }
   };
 
-  const handleCeramicSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    
-    try {
-      await api.ceramicRegistration({
-        fullName: formData.get('fullName') as string,
-        phone: formData.get('phone') as string,
-        email: formData.get('email') as string,
-        address: formData.get('address') as string || '',
-      });
-      toast.success("Регистрация в Ceramic 3D успешно завершена!");
-      e.currentTarget.reset();
-    } catch (error) {
-      toast.error("Ошибка регистрации. Попробуйте позже.");
-    }
-  };
+
 
   const handleReceiptSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -151,18 +135,16 @@ const Index = () => {
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
                   <Icon name="Gift" size={32} className="text-accent" />
-                  <Badge className="bg-accent text-white">Подарок</Badge>
+                  <Badge className="bg-accent text-white">Акция</Badge>
                 </div>
-                <CardTitle>Ceramic 3D - бонусы</CardTitle>
-                <CardDescription>При регистрации</CardDescription>
+                <CardTitle>Комплект для ванной</CardTitle>
+                <CardDescription>Специальное предложение</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Зарегистрируйтесь в программе Ceramic 3D и получите скидку 15% на первую покупку.
+                  Керамическая плитка + клей + затирка. Всё необходимое для ремонта ванной со скидкой 20%.
                 </p>
-                <Button variant="outline" onClick={() => scrollToSection("forms")}>
-                  Зарегистрироваться
-                </Button>
+                <p className="text-2xl font-bold text-accent">от 3 500₽/м²</p>
               </CardContent>
             </Card>
 
@@ -215,7 +197,7 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Теперь в наличии керамическая плитка Ceramic 3D - инновационное покрытие с 3D эффектом.
+                  Новое поступление керамической плитки премиум-класса для ванных комнат и кухонь.
                 </p>
               </CardContent>
             </Card>
@@ -361,9 +343,8 @@ const Index = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Сервисы для клиентов</h2>
           <div className="max-w-5xl mx-auto">
             <Tabs defaultValue="consultation" className="w-full">
-              <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 mb-8">
+              <TabsList className="grid w-full grid-cols-1 md:grid-cols-2 mb-8">
                 <TabsTrigger value="consultation">Консультация специалиста</TabsTrigger>
-                <TabsTrigger value="ceramic">Ceramic 3D</TabsTrigger>
                 <TabsTrigger value="receipt">Регистрация чеков</TabsTrigger>
               </TabsList>
 
@@ -408,51 +389,6 @@ const Index = () => {
                       <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white" disabled={!consultationTime}>
                         Записаться на консультацию
                         <Icon name="Calendar" size={18} className="ml-2" />
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="ceramic">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Регистрация в программе Ceramic 3D</CardTitle>
-                    <CardDescription>
-                      Получите доступ к эксклюзивным предложениям и бонусам при покупке керамики
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleCeramicSubmit} className="space-y-4">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="cer-name">ФИО *</Label>
-                          <Input id="cer-name" name="fullName" placeholder="Иванов Иван Иванович" required />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="cer-phone">Телефон *</Label>
-                          <Input id="cer-phone" name="phone" type="tel" placeholder="+7 (999) 123-45-67" required />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cer-email">Email *</Label>
-                        <Input id="cer-email" name="email" type="email" placeholder="example@mail.ru" required />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cer-address">Адрес доставки</Label>
-                        <Input id="cer-address" name="address" placeholder="Город, улица, дом, квартира" />
-                      </div>
-                      <div className="bg-muted p-4 rounded-lg">
-                        <div className="flex items-start gap-2">
-                          <Icon name="Info" size={20} className="text-accent mt-0.5" />
-                          <p className="text-sm">
-                            После регистрации вы получите персональную карту участника программы и бонус 15% на первую покупку
-                          </p>
-                        </div>
-                      </div>
-                      <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white">
-                        Зарегистрироваться
-                        <Icon name="CheckCircle" size={18} className="ml-2" />
                       </Button>
                     </form>
                   </CardContent>

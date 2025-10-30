@@ -10,15 +10,6 @@ export const api = {
     return response.json();
   },
 
-  async ceramicRegistration(data: { fullName: string; phone: string; email: string; address: string }) {
-    const response = await fetch(`${API_URL}?path=ceramic-registration`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  },
-
   async receiptRegistration(data: { fullName: string; phone: string; receiptNumber: string; purchaseDate: string; amount: number }) {
     const response = await fetch(`${API_URL}?path=receipt-registration`, {
       method: 'POST',
