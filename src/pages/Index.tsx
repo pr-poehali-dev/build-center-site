@@ -8,23 +8,67 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/icon";
 import { toast } from "sonner";
+import SelectTime from "@/components/ui/select-time";
+import { api } from "@/lib/api";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("home");
+  const [consultationTime, setConsultationTime] = useState("");
 
-  const handleConsultationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleConsultationSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("Заявка отправлена! Наш специалист свяжется с вами в ближайшее время.");
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      await api.bathroomConsultation({
+        name: formData.get('name') as string,
+        phone: formData.get('phone') as string,
+        date: formData.get('date') as string,
+        time: consultationTime,
+      });
+      toast.success("Заявка отправлена! Наш специалист свяжется с вами в ближайшее время.");
+      e.currentTarget.reset();
+      setConsultationTime("");
+    } catch (error) {
+      toast.error("Ошибка при отправке заявки. Попробуйте позже.");
+    }
   };
 
-  const handleCeramicSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCeramicSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("Регистрация в Ceramic 3D успешно завершена!");
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      await api.ceramicRegistration({
+        fullName: formData.get('fullName') as string,
+        phone: formData.get('phone') as string,
+        email: formData.get('email') as string,
+        address: formData.get('address') as string || '',
+      });
+      toast.success("Регистрация в Ceramic 3D успешно завершена!");
+      e.currentTarget.reset();
+    } catch (error) {
+      toast.error("Ошибка регистрации. Попробуйте позже.");
+    }
   };
 
-  const handleReceiptSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleReceiptSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("Чек зарегистрирован! Вы участвуете в розыгрыше призов.");
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      await api.receiptRegistration({
+        fullName: formData.get('fullName') as string,
+        phone: formData.get('phone') as string,
+        receiptNumber: formData.get('receiptNumber') as string,
+        purchaseDate: formData.get('purchaseDate') as string,
+        amount: parseFloat(formData.get('amount') as string),
+      });
+      toast.success("Чек зарегистрирован! Вы участвуете в розыгрыше призов.");
+      e.currentTarget.reset();
+    } catch (error) {
+      toast.error("Ошибка регистрации чека. Попробуйте позже.");
+    }
   };
 
   const scrollToSection = (id: string) => {
@@ -326,9 +370,9 @@ const Index = () => {
               <TabsContent value="consultation">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Заявка на консультацию специалиста</CardTitle>
+                    <CardTitle>Запись на консультацию проект "Ванная комната"</CardTitle>
                     <CardDescription>
-                      Наш эксперт свяжется с вами и поможет подобрать материалы для вашего проекта
+                      Наш эксперт проведет консультацию по проектированию вашей ванной комнаты
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -336,29 +380,34 @@ const Index = () => {
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="cons-name">Ваше имя *</Label>
-                          <Input id="cons-name" placeholder="Иван Иванов" required />
+                          <Input id="cons-name" name="name" placeholder="Иван Иванов" required />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="cons-phone">Телефон *</Label>
-                          <Input id="cons-phone" type="tel" placeholder="+7 (999) 123-45-67" required />
+                          <Input id="cons-phone" name="phone" type="tel" placeholder="+7 (999) 123-45-67" required />
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cons-email">Email</Label>
-                        <Input id="cons-email" type="email" placeholder="example@mail.ru" />
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="cons-date">Дата консультации *</Label>
+                          <Input id="cons-date" name="date" type="date" required />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="cons-time">Время консультации *</Label>
+                          <SelectTime id="cons-time" value={consultationTime} onChange={setConsultationTime} />
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cons-message">Опишите ваш проект *</Label>
-                        <Textarea 
-                          id="cons-message" 
-                          placeholder="Расскажите, какие материалы вам нужны, какие работы планируете..." 
-                          rows={4}
-                          required
-                        />
+                      <div className="bg-muted p-4 rounded-lg">
+                        <div className="flex items-start gap-2">
+                          <Icon name="Info" size={20} className="text-accent mt-0.5" />
+                          <p className="text-sm">
+                            Консультации проводятся с 9:00 до 20:00. Продолжительность консультации - 1 час.
+                          </p>
+                        </div>
                       </div>
-                      <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white">
-                        Отправить заявку
-                        <Icon name="Send" size={18} className="ml-2" />
+                      <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white" disabled={!consultationTime}>
+                        Записаться на консультацию
+                        <Icon name="Calendar" size={18} className="ml-2" />
                       </Button>
                     </form>
                   </CardContent>
@@ -378,20 +427,20 @@ const Index = () => {
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="cer-name">ФИО *</Label>
-                          <Input id="cer-name" placeholder="Иванов Иван Иванович" required />
+                          <Input id="cer-name" name="fullName" placeholder="Иванов Иван Иванович" required />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="cer-phone">Телефон *</Label>
-                          <Input id="cer-phone" type="tel" placeholder="+7 (999) 123-45-67" required />
+                          <Input id="cer-phone" name="phone" type="tel" placeholder="+7 (999) 123-45-67" required />
                         </div>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="cer-email">Email *</Label>
-                        <Input id="cer-email" type="email" placeholder="example@mail.ru" required />
+                        <Input id="cer-email" name="email" type="email" placeholder="example@mail.ru" required />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="cer-address">Адрес доставки</Label>
-                        <Input id="cer-address" placeholder="Город, улица, дом, квартира" />
+                        <Input id="cer-address" name="address" placeholder="Город, улица, дом, квартира" />
                       </div>
                       <div className="bg-muted p-4 rounded-lg">
                         <div className="flex items-start gap-2">
@@ -423,26 +472,26 @@ const Index = () => {
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="rec-name">ФИО *</Label>
-                          <Input id="rec-name" placeholder="Иванов Иван Иванович" required />
+                          <Input id="rec-name" name="fullName" placeholder="Иванов Иван Иванович" required />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="rec-phone">Телефон *</Label>
-                          <Input id="rec-phone" type="tel" placeholder="+7 (999) 123-45-67" required />
+                          <Input id="rec-phone" name="phone" type="tel" placeholder="+7 (999) 123-45-67" required />
                         </div>
                       </div>
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="rec-number">Номер чека *</Label>
-                          <Input id="rec-number" placeholder="0000 1234 5678 9012" required />
+                          <Input id="rec-number" name="receiptNumber" placeholder="0000 1234 5678 9012" required />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="rec-date">Дата покупки *</Label>
-                          <Input id="rec-date" type="date" required />
+                          <Input id="rec-date" name="purchaseDate" type="date" required />
                         </div>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="rec-amount">Сумма чека (₽) *</Label>
-                        <Input id="rec-amount" type="number" min="3000" placeholder="3000" required />
+                        <Input id="rec-amount" name="amount" type="number" min="3000" placeholder="3000" required />
                       </div>
                       <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
                         <div className="flex items-start gap-2">

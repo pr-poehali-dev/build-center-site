@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "Get news list",
+      "method": "GET",
+      "path": "/?path=news",
+      "expectedStatus": 200,
+      "expectedBody": [],
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get promotions list",
+      "method": "GET",
+      "path": "/?path=promotions",
+      "expectedStatus": 200,
+      "expectedBody": [],
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get vacancies list",
+      "method": "GET",
+      "path": "/?path=vacancies",
+      "expectedStatus": 200,
+      "expectedBody": [],
+      "bodyMatcher": "partial"
+    }
+  ]
+}
