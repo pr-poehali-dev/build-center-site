@@ -1,0 +1,1 @@
+ALTER TABLE t_p40088213_build_center_site.news ADD COLUMN IF NOT EXISTS author VARCHAR(255);

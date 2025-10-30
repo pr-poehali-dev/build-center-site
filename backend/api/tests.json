@@ -5,7 +5,9 @@
       "method": "GET",
       "path": "/?path=news",
       "expectedStatus": 200,
-      "expectedBody": [],
+      "expectedBody": {
+        "news": []
+      },
       "bodyMatcher": "partial"
     },
     {
@@ -13,7 +15,9 @@
       "method": "GET",
       "path": "/?path=promotions",
       "expectedStatus": 200,
-      "expectedBody": [],
+      "expectedBody": {
+        "promotions": []
+      },
       "bodyMatcher": "partial"
     },
     {
@@ -21,7 +25,9 @@
       "method": "GET",
       "path": "/?path=vacancies",
       "expectedStatus": 200,
-      "expectedBody": [],
+      "expectedBody": {
+        "vacancies": []
+      },
       "bodyMatcher": "partial"
     }
   ]

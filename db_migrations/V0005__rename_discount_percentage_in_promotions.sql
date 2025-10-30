@@ -1,0 +1,1 @@
+ALTER TABLE t_p40088213_build_center_site.promotions RENAME COLUMN discount_percentage TO discount;
